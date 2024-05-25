@@ -1,6 +1,6 @@
 # CCS 229 Intelligent Systems: Final Project
 ## CatGPT: AI Powered Cat Health Assistant 🐈
-### Submitted By: Allana Yzabelle Diaz | BSCS 3A AI | CICT | West Visayas State University
+Submitted By: Allana Yzabelle Diaz | BSCS 3A AI | CICT | West Visayas State University
 
 # Project Overview
 <div align="justify">
