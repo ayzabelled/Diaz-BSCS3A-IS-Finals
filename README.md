@@ -28,8 +28,15 @@ To set up and run CatGpt locally, follow these steps: <br>
 pip install streamlit openai
 ```
 3. Obtain an OpenAI API key by signing up for an account at https://beta.openai.com/signup/. <br>
-4. Replace st.secrets["API_key"] in the code with your actual OpenAI API key. <br>
-5. Run the Streamlit application using the command streamlit run cat_gpt_app.py. <br> 
+4. Replace
+```
+st.secrets["API_key"]
+```
+in the code with your actual OpenAI API key. <br>
+6. Run the Streamlit application using the command
+```
+streamlit run cat_gpt_app.py 
+```
 
 ## Link to Video Demo
 Google Drive Link: https://drive.google.com/file/d/1k0whYxsLz_efd7uV4F6vgvKhVCdLYKfB/view?usp=drive_link
