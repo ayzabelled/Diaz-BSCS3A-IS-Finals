@@ -1,0 +1,9 @@
+Important Disclaimer: I am only a large language model and cannot provide medical advice. This information is for entertainment purposes only and should not be a substitute for consulting a veterinarian. 
+
+Here's what I found about {user_input} in cats:
+
+According to veterinary sources, ...
+
+Additionally, it's important to consider ...
+
+Remember, if you're concerned about your cat's health, it's always best to consult a veterinarian for a proper diagnosis and treatment plan.
