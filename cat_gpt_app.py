@@ -36,64 +36,67 @@ async def app():
     # System context for feedback generation
     system_context = "You are a helpful assistant, only catering to health related concerns of cats. Any concerns unrelated are not your task. Use emojis if possible."
 
-    # Flags to track if feedback has been generated
-    feedback_generated_what = False
-    feedback_generated_addtl = False
-    feedback_generated_when = False
-    feedback_generated_why = False
-    feedback_generated_where = False
+    # Initialize session state for tracking feedback generation
+    if 'feedback_generated' not in st.session_state:
+        st.session_state.feedback_generated = {
+            'what': False,
+            'addtl': False,
+            'when': False,
+            'why': False,
+            'where': False
+        }
 
     # Multi-level prompting: Step 1
-    what = st.text_input("What is your cat's health concern?", disabled=feedback_generated_what)
-    if what and not feedback_generated_what:
+    what = st.text_input("What is your cat's health concern?", disabled=st.session_state.feedback_generated['what'])
+    if what and not st.session_state.feedback_generated['what']:
         feedback = await generate_feedback(f"{what} is my cat's health concern. Please acknowledge positively and only ask to provide additional information. Don't ask when, where or why it happened. ", system_context)
         st.write(feedback)
-        feedback_generated_what = True  # Mark as generated
+        st.session_state.feedback_generated['what'] = True  # Mark as generated
 
-        # Multi-level prompting: Step 2
-        addtl = st.text_input("Provide any additional information.", disabled=feedback_generated_addtl)
-        if addtl and not feedback_generated_addtl:
-            feedback = await generate_feedback(f"{addtl} is any additional information towards the concern. Please acknowledge positively. Ask a when question.", system_context)
-            st.write(feedback)
-            feedback_generated_addtl = True  # Mark as generated
+    # Multi-level prompting: Step 2
+    addtl = st.text_input("Provide any additional information.", disabled=st.session_state.feedback_generated['addtl'])
+    if addtl and not st.session_state.feedback_generated['addtl']:
+        feedback = await generate_feedback(f"{addtl} is any additional information towards the concern. Please acknowledge positively. Ask a when question.", system_context)
+        st.write(feedback)
+        st.session_state.feedback_generated['addtl'] = True  # Mark as generated
 
-            # Multi-level prompting: Step 3
-            when = st.text_input("When did you first notice this behavior?", disabled=feedback_generated_when)
-            if when and not feedback_generated_when:
-                feedback = await generate_feedback(f"{when} is when it started happening. Please acknowledge positively. Ask a why question.", system_context)
-                st.write(feedback)
-                feedback_generated_when = True  # Mark as generated
+    # Multi-level prompting: Step 3
+    when = st.text_input("When did you first notice this behavior?", disabled=st.session_state.feedback_generated['when'])
+    if when and not st.session_state.feedback_generated['when']:
+        feedback = await generate_feedback(f"{when} is when it started happening. Please acknowledge positively. Ask a why question.", system_context)
+        st.write(feedback)
+        st.session_state.feedback_generated['when'] = True  # Mark as generated
 
-                # Multi-level prompting: Step 4
-                why = st.text_area("Why do you think it started happening?", disabled=feedback_generated_why)
-                if why and not feedback_generated_why:
-                    feedback = await generate_feedback(f"{why} is why it started happening. Please acknowledge positively. Ask where the cat is feeling the health concern.", system_context)
-                    st.write(feedback)
-                    feedback_generated_why = True  # Mark as generated
+    # Multi-level prompting: Step 4
+    why = st.text_area("Why do you think it started happening?", disabled=st.session_state.feedback_generated['why'])
+    if why and not st.session_state.feedback_generated['why']:
+        feedback = await generate_feedback(f"{why} is why it started happening. Please acknowledge positively. Ask where the cat is feeling the health concern.", system_context)
+        st.write(feedback)
+        st.session_state.feedback_generated['why'] = True  # Mark as generated
 
-                    # Multi-level prompting: Step 5
-                    where = st.text_input("Where is your cat feeling the health concern?", disabled=feedback_generated_where)
-                    if where and not feedback_generated_where:
-                        feedback = await generate_feedback(f"{where} is where the cat feels the health concern. Please acknowledge positively and tell the user to press the button below to provide advice.", system_context)
-                        st.write(feedback)
-                        feedback_generated_where = True  # Mark as generated
+    # Multi-level prompting: Step 5
+    where = st.text_input("Where is your cat feeling the health concern?", disabled=st.session_state.feedback_generated['where'])
+    if where and not st.session_state.feedback_generated['where']:
+        feedback = await generate_feedback(f"{where} is where the cat feels the health concern. Please acknowledge positively and tell the user to press the button below to provide advice.", system_context)
+        st.write(feedback)
+        st.session_state.feedback_generated['where'] = True  # Mark as generated
 
-                        # Context for AI generation based on the user's input
-                        context = (f"Generate helpful advice or assistance on: what had happened to the cat: {what}, additional information to the concern: {addtl}, when it happened: {when}, "
-                                   f"why it happened: {why}, where it happened: {where} "
-                                   f"Please be nice and help the user, include emojis and put it in bullet forms if possible.")
-                        question = "What should I do to help my cat?"
+    # Context for AI generation based on the user's input
+    context = (f"Generate helpful advice or assistance on: what had happened to the cat: {what}, additional information to the concern: {addtl}, when it happened: {when}, "
+               f"why it happened: {why}, where it happened: {where} "
+               f"Please be nice and help the user, include emojis and put it in bullet forms if possible.")
+    question = "What should I do to help my cat?"
 
-                        # Button to generate response
-                        if st.button("Get Help from CatGPT"):
-                            if question and context:
-                                # Generate advice suggestion
-                                response = await generate_response(question, context)
-                                st.write("CatGPT's Advice")
-                                st.write("Important Disclaimer: I am a language model AI and cannot provide medical advice. The information provided is for educational purposes only and should not replace consultation with a qualified veterinarian.")
-                                st.write(response)
-                            else:
-                                st.error("Please make sure you don't leave any field blank.")
+    # Button to generate response
+    if st.button("Get Help from CatGPT"):
+        if question and context:
+            # Generate advice suggestion
+            response = await generate_response(question, context)
+            st.write("CatGPT's Advice")
+            st.write("Important Disclaimer: I am a language model AI and cannot provide medical advice. The information provided is for educational purposes only and should not replace consultation with a qualified veterinarian.")
+            st.write(response)
+        else:
+            st.error("Please make sure you don't leave any field blank.")
 
 # Function to generate the advice response
 async def generate_response(question, context):
